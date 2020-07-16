@@ -1,0 +1,823 @@
+    7  sudo podman pull registry.access.redhat.com/rhel
+    8  sudo podman run -it rhel /bin/bash
+    9  sudo podman run -d --name apache rhscl/httpd-24-rhel7
+   10  podman ps
+   11  sudo podman ps
+   12  sudo podman inspect apache|more
+   13  sudo podman inspect apache |grep IP
+   14  sudo podman stop apache
+   15  sudo podman inspect apache |grep IP
+   16  sudo podman ps -a
+   17  sudo podman rn apachie
+   18  sudo podman rn apache
+   19  sudo podman rm apache
+   20  sudo podman ps -a
+   21  sudo podman run -d --name apache rhscl/htppd-24-rhel7
+   22  sudo podman logs 
+   23  lab container-create start
+   24  sudo podman run --name mysql-basic -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypass55 -e MYSQL_DATABASE=items -e MYSQL_ROOT_PAAWORD=r00tpa55 -d rhscl/mysql-57-rhel7:5.7-3.14
+   25  sudo podman ps -a
+   26  sudo podman exec -it mysql-basic /bin/bash
+   27  lab container-create finish
+   28  lab container-review start
+   29  sudo podman run -d --name httpd-basic redhattraining/httpd-parent:2.4
+   30  sudo podman ps -a
+   31  sudo podman rm http-basic
+   32  sudo podman rm httpd-basic
+   33  sudo podman stop httpd-basic
+   34  sudo podman rm httpd-basic
+   35  sudo podman ps -a
+   36  sudo podman run -d -p 8080:80 --name httpd-basic redhattraining/httpd-parent:2.4
+   37  curl http://localhost:8080
+   38  sudo podman exec -it httpd-basic /bin/bash
+   39  curl http://localhost:8080
+   40  lab container-review grade
+   41  sudo podman exec -it httpd-basic /bin/bash
+   42  curl http://localhost:8080
+   43  lab container-review grade
+   44  lab container-review finish
+   45  sudo podman exec -it httpd-basic /bin/bash
+   46  sudo podman run -d -p 8080:80 --name httpd-basic redhattraining/httpd-parent:2.4
+   47  sudo podman ps -a
+   48  curl http://localhost:8080
+   49  lab container-review grade
+   50  sudo podman exec -it httpd-basic /bin/bash
+   51  lab container-review grade
+   52  lab container-review finish
+   53  clear
+   54  lab manage-lifecycle start
+   55  sudo podman run --name mysql-db rhscl/mysql-57-rhel7
+   56  sudo podman images
+   57  sudo podman logs mysql-db
+   58  sudo podman run --name mysql -d -e MYSQL_DATABASE=user1 -e MYSQL_PASSWORD=mypass -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 rhscl/mysql-57-rhel7
+   59  sudo podman ps
+   60  sudo podman run --name mysql -d -e MYSQL_DATABASE=user1 -e MYSQL_PASSWORD=mypass -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 rhscl/mysql-57-rhel7
+   61  sudo podman ps -a
+   62  sudo podman inspect -f '{{.NetworkSettings.IPAddress }}' mysql
+   63  sudo podman inspect mysql
+   64  sudo podman inspect mysql |grep IP
+   65  sudo podman run --name mysql -d -e MYSQL_DATABASE=user1 -e MYSQL_PASSWORD=mypass -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 rhscl/mysql-57-rhel7
+   66  sudo podman rm mysql
+   67  sudo podman run --name mysql -d -e MYSQL_DATABASE=user1 -e MYSQL_PASSWORD=mypass -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 rhscl/mysql-57-rhel7
+   68  sudo podman inspect -f '{{.NetworkSettings.IPAddress }}' mysql
+   69  sudo podman ps -a
+   70  sudo podman logs mysql
+   71  sudo podman run --name mysql -d -e MYSQL_DATABASE=user1 -e MYSQL_PASSWORD=mypass -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 rhscl/mysql-57-rhel7
+   72  sudo podman rm mysql
+   73  sudo podman run --name mysql -d -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypass -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 rhscl/mysql-57-rhel7
+   74  sudo podman ps -a
+   75  sudo podman ps 
+   76  set -o vi
+   77  sudo podman inspect -f '{{.NetworkSettings.IPAddress }}' mysql
+   78  mysql -uuser1 -h 10.88.0.12 -p items
+   79  sudo podman run --name mysql-2 -it rhscl/mysql-57-rhel7 /bin/bash
+   80  sudo podman ps
+   81  sudo podman exec mysql /bin/bash -c 'mysql -uuser1 -p -e "select * from items.Projects;"'
+   82  lab manage-lifecycle finish 
+   83  lab manage-storage start
+   84  cd /var/local/mysql
+   85  sudo mkdir -pv /var/local/mysql
+   86  sudo semanage fcontext -a -t container_file_t '/var/local/mysql(/.*)?'
+   87  ls -dZ /var/local/mysql/
+   88  sudo chown -Rv 27:27 /var/local/mysql
+   89  sudo podman pull dhscl/mysql-57-rhel7
+   90  clear
+   91  sudo podman pull rhscl/mysql-57-rhel7
+   92  sudo podman run --name persist-db -d -v /var/local/mysql:/var/lib/mysql/data -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55
+   93  sudo podman run --name persist-db -d -v /var/local/mysql:/var/lib/mysql/data -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 rhscl/mysql-57-rhel7
+   94  sudo podman ps
+   95  sudo podman ps -a
+   96  clear
+   97  sudo podman run --name persist-db -d -v /var/local/mysql:/var/lib/mysql/data -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 rhscl/mysql-57-rhel7
+   98  sudo podman ps --format="table {{.ID}} {{.Names}} {{.Status}}"
+   99  sudo podman rm persist-db 
+  100  sudo podman run --name persist-db -d -v /var/local/mysql:/var/lib/mysql/data -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 rhscl/mysql-57-rhel7
+  101  sudo podman ps --format="table {{.ID}} {{.Names}} {{.Status}}"
+  102  ls -al /var/local/mysql/
+  103  sudo podman images
+  104  sudo podman logs
+  105  sudo podman ps -a
+  106  sudo podman logs 1edfbd55c92f
+  107  sudo podman run --name persist-db -d -v /var/local/mysql:/var/lib/mysql/data -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 rhscl/mysql-57-rhel7
+  108  sudo podman rm persist-db 
+  109  sudo podman run --name persist-db -d -v /var/local/mysql:/var/lib/mysql/data -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55
+  110  -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 rhscl/mysql-57-rhel7
+  111  sudo podman run --name persist-db -d -v /var/local/mysql:/var/lib/mysql/data -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 rhscl/mysql-57-rhel7
+  112  sudo podman ps -a
+  113  sudo podman ps --format="table {{.ID}} {{.Names}} {{.Status}}"
+  114  sudo podman ps -a
+  115  ls -l /var/local/mysql
+  116  sudo chown -Rv 27:27 /var/local/mysql
+  117  sudo podman run --name persist-db -d -v /var/local/mysql:/var/lib/mysql/data -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 rhscl/mysql-57-rhel7
+  118  sudo podman rm persist-db 
+  119  sudo podman run --name persist-db -d -v /var/local/mysql:/var/lib/mysql/data -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 rhscl/mysql-57-rhel7
+  120  sudo podman ps 
+  121  sudo podman ps -a
+  122  sudo semanage fcontext -a -t container_file_t '/var/local/mysql(/.*)?'
+  123  sudo podman logs 444b69c9bbac
+  124  cd /var/local/mysql
+  125  ls -ltr
+  126  ls -ld /var/local/mysql
+  127  ls -dZ /var/local/mysql/
+  128  sudo podman logs 444b69c9bbac
+  129  ls -l /var/local/mysql
+  130  ls -ld /var/local/mysql
+  131  ls -ldZ /var/local/mysql
+  132  history
+  133  sudo restorecon -Rv /var/local/mysql
+  134  ls -ldZ /var/local/mysql
+  135  sudo podman rm persist-db 
+  136  sudo podman run --name persist-db -d -v /var/local/mysql:/var/lib/mysql/data -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 rhscl/mysql-57-rhel7
+  137  sudo podman ps -a
+  138  sudo podman ps
+  139  sudo podman ps --format="table {{.ID}} {{.Names}} {{.Status}}"
+  140  ls -ltr /var/local/mysql
+  141  lab manage-storage finish
+  142  lab manage-networking start
+  143  sudo podman run --name mysqldb-port -d -v /var/local/mysql:/var/lib/mysql/data -p 13306:3306 -e MYSQL_USER=user1  -e MYSQL_PASSWORD=mypa55 -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD-r00tpa55 rhscl/mysql-57-rhel7
+  144  sudo podman run --name mysqldb-port -d -v /var/local/mysql:/var/lib/mysql/data -p 13306:3306 -e MYSQL_USER=user1  -e MYSQL_PASSWORD=mypa55 -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 rhscl/mysql-57-rhel7
+  145  sudo podman ps
+  146  ls -al /var/local/mysql
+  147  sudo podman ps
+  148  sudo podman port
+  149  mysql -uuser1 -h 127.0.0.1 -pmypa55 -P13306 items < /home/student/Do180/labs/manage-networking/db.sql
+  150  mysql -uuser1 -h 127.0.0.1 -pmypa55 -P13306 items < /home/student/DO180/labs/manage-networking/db.sql
+  151  mysql -uuser1 -h 127.0.0.1 -pmypa55 -P13306 items -e "SELECT * FROM Item"
+  152  sudo podman exec -it mysqldb-port /bin/bash
+  153  sudo podman exec -it mysqldb-port /opt/rh/rh-mysql57/root/usr/bin/mysql -uroot items -e "SELECT * FROM Item"
+  154  lab manage-networking finish
+  155  lab manage-review start
+  156  mkdir /var/local/mysql
+  157  cd
+  158  ls -ld /var/local/mysql
+  159  mkdir /var/local/mysql
+  160  sudo mkdir /var/local/mysql
+  161  sudo semanage fcontext -a -t container_file_t '/var/local/mysql(/.*)?'
+  162  sudo restorecon -R /var/local/mysql
+  163  sudo chown -Rv 27.27 /var/local/mysql
+  164  ls -ld /var/local/mysql
+  165  sudo podman run --name mysql-1 -d -v /var/local/mysql:/var/lib/mysql/data -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 rhscl/mysql-57-rhel7
+  166  sudo podman ps
+  167  sudo podman inspect mysql-1 |grep IP
+  168  mysql -uuser1 -h 10.88.0.20 -pmypa55 items < /home/student/DO180/labs/manage-review/db.spl
+  169  ls -al /home/student/DO180/labs/manage-review/db.sql 
+  170  mysql -uuser1 -h 10.88.0.20 -pmypa55 items < /home/student/DO180/labs/manage-review/db.sql
+  171  mysql -uuser1 -h 10.88.0.20 -pmypa55 items -e "SELECT * FROM Item'
+  172  mysql -uuser1 -h 10.88.0.20 -pmypa55 items -e "SELECT * FROM Item"
+  173  sudo podman stop mysql-1
+  174  sudo podman run --name mysql-2 -d -v /var/local/mysql:/var/lib/mysql/data -p 13306:3306 -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 rhscl/mysql-57-rhel7
+  175  sudo podman ps
+  176  sudo podman ps -a >/tmp/my-containers
+  177  sudo podman exec -it mysql-2 /bin/bash
+  178  mysql -uuser1 -h workstation.lab.example.com -pmypa55 -P13306 Items
+  179  ip addr
+  180  set -o vi
+  181  mysql -uuser1 -h 10.88.0.20 -pmypa55 -P13306 Items
+  182  mysql -uuser1 -h 10.88.0.20 -pmypa55 -P13306 items
+  183  mysql -uuser1 -h workstation.lab.example.com -pmypa55 -P13306 items
+  184  sudo podman rm mysql-1
+  185  lab managfe-review grade
+  186  lab manage-review grade
+  187  w
+  188  df
+  189  ifconfig -a
+  190  lab-configure
+  191  df
+  192  ls
+  193  lab image-operations start
+  194  sudo podman login quay.io
+  195  sudo podman run -d --name offical-httpd -p 8180:80 redhattraining/httpd-parent
+  196  sudo podman images
+  197  sudo podman ps
+  198  sudo podman exec -it official-httpd /bin/bash
+  199  sudo podman exec -it offical-httpd /bin/bash
+  200  curl 127.0.0.1:8180/d0180.html
+  201  curl 127.0.0.1:8180/do180.html
+  202  sudo podman diff
+  203  sudo podman diff offical-httpd
+  204  sudo podman inspect -f "{{range .Mounts}}{{println .Destination}}{{end}}" offical-httpd
+  205  sudo podman diff offical-httpd
+  206  sudo podman stop offial-httpd
+  207  sudo podman stop offcal-httpd
+  208  sudo podman ps
+  209  sudo podman stop offical-httpd
+  210  sudo podman commit -a 'Remesh' offical-httpd do180-custom-httpd
+  211  sudo podman images
+  212  sudo podman commit -a 'Remesh' offical-httpd do180-custom-httpdsudo podman tag do180-custom-httpd quay.io/remeshbabu618/do180-custom-httpd:v1.0
+  213  sudo podman tag do180-custom-httpd quay.io/remeshbabu618/do180-custom-httpd:v1.0
+  214  sudo podman images
+  215  sudo podman push quay.io/remeshbabu618/do180-custom-httpd:v1.0
+  216  sudo podman search
+  217  sudo podman images
+  218  sudo podman pull -q quay.io/remeshbabu618/do180-custom-httpd
+  219  sudo podman run -d --name test-httpd -p 8280:80 quay.io/remeshbabu618/do180-custom-httpd
+  220  sudo podman images
+  221  sudo podman pull -q quay.io/remeshbabu618/do180-custom-httpd
+  222  sudo podman run -d --name test-httpd -p 8280:80 quay.io/remeshbabu618/do180-custom-httpd
+  223  sudo podman pull -q quay.io/remeshbabu618/do180-custom-httpd
+  224  sudo podman images
+  225  sudo podman pull quay.io/remeshbabu618/do180-custom-httpd 
+  226  set -o vi
+  227  sudo podman push quay.io/remeshbabu618/do180-custom-httpd:v1.0
+  228  sudo podman pull quay.io/remeshbabu618/do180-custom-httpd 
+  229  sudo podman images
+  230  sudo podman pull quay.io/remeshbabu618/do180-custom-httpd:v1.0
+  231  sudo podman run -d --name test-httpd -p 8280:80 quay.io/remeshbabu618/do180-custom-httpd:v1.0
+  232  curl http://localhost:8280/d0180.html
+  233  curl http://localhost:8280/do180.html
+  234  lab image-review start
+  235  podman search docker.io/nginx
+  236  podman search docker.io/nginx -f is-offical=true
+  237  podman search docker.io/nginx|grep official
+  238  sudo podman pull docker.io/nginx:1.17
+  239  sudo podman images
+  240  sudo podman run --name official-nginx -d -p 8080:80 docker.io/nginx:1.17
+  241  sudo podman exec -it official-nginx /bin/bash
+  242  curl 127.0.01:/8080
+  243  curl 127.0.01:8080
+  244  sudo podman stop official-nginx
+  245  sudo podman commit -a 'Remesh' official-nginx do180/mynginx:v1.0-SNAPSHOT
+  246  sudo podman images
+  247  sudo podman run --name official-nginx-dev -d -p 8080:80 do180/mynginx:v1.0-SNAPSHOT
+  248  sudo podman exec -it official-nginx-dev /bin/bash
+  249  curl 127:0.0.1:8080
+  250  curl 127.0.0.1:8080
+  251  sudo podman stop official-nginx-dev
+  252  sudo podman commit -a 'Remesh' official-nginx-dev do180/mynginx:v1.0
+  253  sudo podman images
+  254  sudo podman ps
+  255  sudo podman ps -a --format="{{.ID}} {{.Names}} {{.Status}}"
+  256  sudo podman rm official-nginx-dev
+  257  sudo podman ps -a --format="{{.ID}} {{.Names}} {{.Status}}"
+  258  sudo podman rmi do180/mynginx:v1.0-SNAPSHOT
+  259  sudo podman images
+  260  sudo podman run -d --name my0nginx -p 8280:80 do180/mynginx:v1.0
+  261  sudo podman run -d --name my-nginx -p 8280:80 do180/mynginx:v1.0
+  262  sudo podman run -d --name my-nginx -p 8380:80 do180/mynginx:v1.0
+  263  sudo podman run -d --name my-nginx1 -p 8380:80 do180/mynginx:v1.0
+  264  curl 127.0.0.1:8380
+  265  lab image-review grade
+  266  lab image-review finish
+  267  clear
+  268  lab dockerfile-create start
+  269  sudo podman images
+  270  sudo podman ps
+  271  vi /home/student/DO180/labs/dockerfile-create/Dockerfile
+  272  cd /home/student/DO180/labs/dockerfile-create
+  273  sudo podman build --layers=false -t do180/apache .
+  274  sudo podman images
+  275  sudo podman run --name lab-apache -d -p 10080:80 do180/apache
+  276  sudo podman ps
+  277  curl 127.0.0.1:10080
+  278  lab dockerfile finish
+  279  lab dockerfile-create finish
+  280  sudo podman images
+  281  lab dockerfile-review start
+  282  cd /home/student/DO180/labs/dockerfile-review/
+  283  vi Dockerfile
+  284  ls -al
+  285  sudo podman build -t do180/custom_apache
+  286  sudo podman build -t do180/custom_apache .
+  287  sudo podman images
+  288  sudo podman run -d --name dockerfile -p 20080:8080 do180/custom-apache
+  289  sudo podman run -d --name dockerfile -p 20080:8080 do180/custom_apache
+  290  sudo podman ps
+  291  curl 127.0.0.1:20080
+  292  lab dockerfile-review grade
+  293  lab dockerfile-review finish
+  294  clear
+  295  oc login
+  296  df
+  297  oc get pods
+  298  clear
+  299  ls -al
+  300  clear
+  301  lab openshift-resouces start
+  302  lab openshift-resources start
+  303  ls -al
+  304  source 
+  305  source /usr/local/etc/ocp4.config
+  306  oc login -u rcherthedath-cobank-com -p 8e3ff4c35ad84238834f https://api.ocp-na2.prod.nextcle.com:6443
+  307  oc get pods
+  308  oc new-project rcherthedath-cobank-com-mysql-openshift
+  309  oc new-app --docker-image=registry.access.redhat.com/rhscl/mysql-57-rhel7:latest --name=mysql-openshift
+  310  oc status
+  311  oc get pods
+  312  oc get pods -o=wide
+  313  oc describe pod mysql-openshift-1-glqrp
+  314  oc describe pod mysql-openshift-1-deploy 
+  315  clear
+  316  oc describe pod mysql-openshift-1-deploy 
+  317  oc get svc
+  318  oc describe service mysql-openshift
+  319  oc describe dc mysql-openshift
+  320  oc expose service mysql-openshift
+  321  oc get routes
+  322  oc port-forward mysql-openshift-1-deploy 3306:3306
+  323  oc get pods
+  324  oc logs mysql-openshift-1-6ms66 
+  325  history
+  326  oc get all
+  327  oc delete all --all
+  328  oc new-app --docker-image=registry.access.redhat.com/rhscl/mysql-57-rhel7:latest --name=mysql-openshift -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_DATABASE=testdb -e MYSQL_ROOT_PASSWORD=r00tpa55
+  329  oc status
+  330  set -o vi
+  331  oc get pods -o=wide
+  332  oc get pods
+  333  ooc describe pod mysql-openshift-1-mjm79
+  334  oc describe pod mysql-openshift-1-mjm79
+  335  oc get svc
+  336  oc describe service mysql-openshift
+  337  oc describe dc mysql-openshift
+  338  oc expose service mysql-openshift
+  339  oc get routes
+  340  oc port-forward mysql-openshift-1-mjm79  3306:3306
+  341  oc lab openshift-resources finish
+  342  lab openshift-resources finish
+  343  clear
+  344  lab openshift-routes start
+  345  source /usr/local/etc/ocp4.config
+  346  set -o vi
+  347  oc login -u rcherthedath-cobank-com -p 8e3ff4c35ad84238834f https://api.ocp-na2.prod.nextcle.com:6443
+  348  oc new-project rcherthedath-cobank-com-route
+  349  oc new-app php:7.1~https://github.com/rcherthedath-cobank-com/DO180-apps --context-dir php-helloworld --name php-hellpworld
+  350  oc status
+  351  oc get pods
+  352  oc get pods -w
+  353  oc new-app php:7.1~https://github.com/remehbabu618/DO180-apps --context-dir php-helloworld --name php-hellpworld
+  354  oc get pods -w
+  355  oc get pods
+  356  oc logs php-hellpworld-1-build
+  357  oc get pods
+  358  oc delete all --all
+  359  oc new-app php:7.1~https://github.com/remehbabu618/DO180-apps --context-dir php-helloworld --name php-helloworld
+  360  oc logs bc/php-helloworld
+  361  oc logs -f bc/php-helloworld
+  362  oc new-app php:7.1~https://github.com/remehbabu618/DO180-apps --context-dir php-helloworld --name php-helloworld
+  363  oc delete all --all
+  364  oc new-app php:7.1~https://github.com/remehbabu618/DO180-apps --context-dir php-helloworld --name php-helloworld
+  365  git clone https://github.com/remeshbabu618/DO180-apps
+  366  oc delete all --all
+  367  oc new-app php:7.1~https://github.com/remehbabu618/DO180-apps --context-dir php-helloworld --name php-helloworld
+  368  oc get pods
+  369  oc new-app php:7.1~https://github.com/remehbabu618/DO180-apps --context-dir php-helloworld --name php-helloworld
+  370  oc get pods
+  371  clear
+  372  git clone https://github.com/remeshbabu618/DO180-apps.git
+  373  git clone https://github.com/remeshbabu618/DO180-apps
+  374  oc new-app php:7.1~https://github.com/remehbabu618/DO180-apps --context-dir php-helloworld --name php-helloworld
+  375  oc delete all --all
+  376  oc new-app php:7.1~https://github.com/remehbabu618/DO180-apps --context-dir php-helloworld --name php-helloworld
+  377  oc logs bc/php-helloworld
+  378  git clone
+  379  git clone https://github.com/remeshbabu618/DO180-apps
+  380  ls
+  381  cd DO180-apps
+  382  ls
+  383  oc projects
+  384  set -o vi
+  385  oc delete all --all
+  386  oc projects
+  387  oc new-app php:7.1~https://github.com/remehbabu618/DO180-apps --context-dir php-helloworld --name php-helloworld
+  388  oc logs bc/php-helloworld
+  389  oc delete all --all
+  390  oc new-app php:7.1~https://github.com/remeshbabu618/DO180-apps --context-dir php-helloworld --name php-helloworld
+  391  oc logs bc/php-helloworld
+  392  oc get pods
+  393  oc logs bc/php-helloworld
+  394  oc get pods
+  395  oc logs bc/php-helloworld
+  396  oc describe svc.php-helloworld
+  397  oc describe svc/php-helloworld
+  398  oc expose svc/php-helloworld
+  399  oc describe route
+  400  curl php-helloworld-rcherthedath-cobank-com-route
+  401  curl php-helloworld-rcherthedath-cobank-com-route.
+  402  oc status
+  403  oc describe route
+  404  curl php-helloworld-rcherthedath-cobank-com-route.apps.ocp-na2.prod.nextcle.com
+  405  oc delete route/php-helloworld
+  406  oc expose svc/php-helloworld --name rcherthedath-cobank-com-xyz
+  407  oc describe route
+  408  curl rcherthedath-cobank-com-xyz-rcherthedath-cobank-com-route.apps.ocp-na2.prod.nextcle.com
+  409  lab openshift-routes finish
+  410  mysql -uuser1 -pmypa55 --protocol tcp -h localhost
+  411  oc describe route
+  412  lab openshift-s2i start
+  413  cd /home/student
+  414  ls
+  415  git clone https://gitgub.com/remeshbabu618/D)180-apps
+  416  git clone https://gitgub.com/remeshbabu618/DO180-apps
+  417  git clone https://github.com/remeshbabu618/DO180-apps
+  418  lab openshift-s2i start
+  419  cd ~/DO180/labs/openshift-s2i/
+  420  ls -ltr
+  421  tree s2i-php-container/
+  422  cat s2i-php-container/5.6/s2i/bin/assemble 
+  423  cat s2i-php-container/5.6/s2i/bin/run
+  424  cat s2i-php-container/5.6/Dockerfile.rhel7 
+  425  cd ~/DO180-apps/
+  426  git checkout master
+  427  git checkout -b s2i
+  428  git push -u origin s2i
+  429  cat /home/student/DO180-apps/php-helloworld/index.php 
+  430  source /usr/local/etc/ocp4.config 
+  431  cat /usr/local/etc/ocp4.config 
+  432  oc login -u rcherthedath-cobank-com -p 8e3ff4c35ad84238834f https://api.ocp-na2.prod.nextcle.com:6443
+  433  oc new-project rcherthedath-cobank-com-s2i
+  434  oc new-app -i php:7.1 --name=php-helloworld https://github.com/remeshbabu618/DO180-apps#s2i --context-dir php-helloworld
+  435  oc get pods
+  436  oc get pods -w
+  437  oc logs --all-containers -f php-helloworld-1-build
+  438  oc get pods -w
+  439  oc describe dc/php-helloworld
+  440  oc expose service php-helloworld --name rcherthedath-cobank-com-helloworld
+  441  oc get route -o jsonpath='{..src.host}{"\n"}'
+  442  curl -s rcherthedath-cobank-com-helloworld-rcherthedath-cobank-com-s2i.apps.ocp-na2.prod.nextcle.com
+  443  cd ~/DO180-apps/php-helloworld/
+  444  vi index.php 
+  445  git add
+  446  git add .
+  447  git commit -m 'Changed Index Page Contents.'
+  448  git push origin s2i
+  449  cd  ..
+  450  oc start-build php-helloworld
+  451  oc logs php-helloworld-2-build -f
+  452  oc get pods -1
+  453  oc get pods -w
+  454  curl -s rcherthedath-cobank-com-helloworld-rcherthedath-cobank-com-s2i.apps.ocp-na2.prod.nextcle.com
+  455  lab openshift-s2i finish
+  456  lab openshift-webconsole start
+  457  cd ~/DO180-apps/
+  458  git checkout master
+  459  git checkout -b console
+  460  git push -u origin console
+  461  clear
+  462  cat /home/student/DO180-apps/php-helloworld/index.php 
+  463  set -o vi
+  464  source /usr/local/etc/ocp4.config 
+  465  cat /usr/local/etc/ocp4.config 
+  466  cd ~/DO180-apps/php-helloworld/
+  467  vi index.php 
+  468  git add index.php
+  469  git commit -m 'updated message'
+  470  cat index.php 
+  471  lab openshift-webconsole finish
+  472  lab openshift-review start
+  473  set -o vi
+  474  source /usr/local/etc/ocp4.config 
+  475  cat /usr/local/etc/ocp4.config 
+  476  oc login -u rcherthedath-cobank-com -p 8e3ff4c35ad84238834f https://api.ocp-na2.prod.nextcle.com:6443
+  477  oc new-project rcherthedath-cobank-com-ocp
+  478  oc new-app php:7.1~https://github.com/RedHatTraining/DO180-apps --context-dir temps --name temps
+  479  oc logs -f bc/temsp
+  480  oc logs -f bc/temps
+  481  oc get pods -w
+  482  oc expose svc/temps
+  483  oc get route/temps
+  484  ocp openshift-review grade
+  485  lab openshift-review grade
+  486  lab openshift-review finish
+  487  df
+  488  clear
+  489  lab multicontainer-design start
+  490  ls -al /home/student/DO180/labs/multicontainer-design/images/mysql/Dockerfile 
+  491  cd ~/DO180/labs/multicontainer-design/images/mysql/
+  492  sudo podman build -t do180/mysql-57-rhel7 --layer=false
+  493  sudo podman build -t do180/mysql-57-rhel7 --layers=false
+  494  sudo podman build -t do180/mysql-57-rhel7 --layers=false .
+  495  sudo podman images
+  496  vi /home/student/DO180/labs/multicontainer-design/images/nodejs/Dockerfile 
+  497  pwd
+  498  cd ../nodejs/
+  499  sudo podman build -t do180/nodejs --layers=false
+  500  pwd
+  501  cd ~/DO180/labs/multicontainer-design/images/nodejs/ 
+  502  sudo podman build -t do180/nodejs --layers=false .
+  503  sudo podman images --format "table {{.ID}} {{.Repository}} {{.Tag}}"
+  504  vi /home/student/DO180/labs/multicontainer-design/deploy/nodejs/nodejs-source/models/db.js 
+  505  cd ~/DO180/labs/multicontainer-design/deploy/nodejs/
+  506  ./build.sh 
+  507  sudo podman images --format "table {{.ID}} {{.Repository}} {{.Tag}}"
+  508  vi /home/student/DO180/labs/multicontainer-design/deploy/nodejs/networked/run.sh 
+  509  sudo podman run -d --name mysql -e MYSQL_DATABASE=items -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_ROOT_PASSWORD=r00tpa55 -v $PWD/work/data:/var/lib/mysql/data -v $PWD/work/init:/var/lib/mysql/init -p 30306:3306 --ip 10.88.100.101 do180/mysql-57-rhel7
+  510  ls -al /home/student/DO180/labs/multicontainer-design/deploy/nodejs/work/data
+  511  git clone https://github.com/remeshbabu618/DO180-apps
+  512  ls -al /home/student/DO180/labs/multicontainer-design/deploy/nodejs/work/data
+  513  cd
+  514  git clone https://github.com/remeshbabu618/DO180-apps
+  515  ls -al /home/student/DO180/labs/multicontainer-design/deploy/nodejs/work/data
+  516  clear
+  517  sudo podman run -d --name mysql -e MYSQL_DATABASE=items -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_ROOT_PASSWORD=r00tpa55 -v $PWD/work/data:/var/lib/mysql/data -v $PWD/work/init:/var/lib/mysql/init -p 30306:3306 --ip 10.88.100.101 do180/mysql-57-rhel7
+  518  ls -al /home/student/DO180/labs/multicontainer-design/deploy/nodejs/work/data
+  519  vi /home/student/DO180/labs/multicontainer-design/deploy/nodejs/networked/run.sh 
+  520  cd ~/DO180/labs/multicontainer-design/deploy/nodejs/
+  521  pwd
+  522  ls -al 
+  523  sudo podman run -d --name mysql -e MYSQL_DATABASE=items -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_ROOT_PASSWORD=r00tpa55 -v $PWD/work/data:/var/lib/mysql/data -v $PWD/work/init:/var/lib/mysql/init -p 30306:3306 --ip 10.88.100.101 do180/mysql-57-rhel7
+  524  sudo podman images --format "table {{.ID}} {{.Repository}} {{.Tag}}"
+  525  vi /home/student/DO180/labs/multicontainer-design/deploy/nodejs/networked/run.sh 
+  526  sudo podman run -d --name mysql -e MYSQL_DATABASE=items -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_ROOT_PASSWORD=r00tpa55 -v $PWD/work/data:/var/lib/mysql/data -v $PWD/work/init:/var/lib/mysql/init -p 30306:3306 --ip 10.88.100.101 do180/mysql-57-rhel7
+  527  vi /home/student/DO180/labs/multicontainer-design/deploy/nodejs/networked/run.sh 
+  528  ls -al
+  529  ./run.sh
+  530  /home/student/DO180/labs/multicontainer-design/deploy/nodejs/networked/run.sh 
+  531  sudo podman run -d --name mysql -e MYSQL_DATABASE=items -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_ROOT_PASSWORD=r00tpa55 -v $PWD/work/data:/var/lib/mysql/data -v $PWD/work/init:/var/lib/mysql/init -p 30306:3306 --ip 10.88.100.101 do180/mysql-57-rhel7
+  532  sudo podman ps
+  533  vi /home/student/DO180/labs/multicontainer-design/deploy/nodejs/networked/run.sh 
+  534  /home/student/DO180/labs/multicontainer-design/deploy/nodejs/networked/run.sh 
+  535  sudo podman ps
+  536  cd /home/student/DO180/labs/multicontainer-design/deploy/nodejs/networked/
+  537  ls
+  538  ./run.sh 
+  539  sudo podman ps --format "table {{.ID}} {{.Repository}} {{.Tag}}"
+  540  sudo podman ps --format "table {{.ID}} {{.Names}} {{.Image}} {{.Status}}"
+  541  sudo podman -it todoapi env
+  542  sudo podman exec  -it todoapi env
+  543  sudo podman ps
+  544  sudo podman exec  -it mysql env
+  545  lab multicontainer-design finish 
+  546  clear
+  547  lab multicontainer-openshift start
+  548  cd ~/DO180/labs/multicontainer-openshift/images/mysql/
+  549  ls -al
+  550  sudo podman build -t do180-mysql-57.rhel7 .
+  551  source /usr/local/etc/ocp4.config 
+  552  cat  /usr/local/etc/ocp4.config 
+  553  sudo podman login quay.io -u remeshbabu618
+  554  sudo podman images
+  555  sudo podman tag do180-mysql-57-rhel7 quay.io/remeshbabu618/do180-mysql-57-rhel7
+  556  sudo podman tag do180-mysql-57.rhel7 quay.io/remeshbabu618/do180-mysql-57-rhel7
+  557  sudo podman images
+  558  sudo podman push quay.io/remeshbabu618/do180-mysql-57-rhel
+  559  sudo podman push quay.io/remeshbabu618/do180-mysql-57-rhel7
+  560  cd ~/DO180/labs/multicontainer-openshift/
+  561  cd images/nodejs/
+  562  sudo podman build -t do180-nodejs .
+  563  pwd
+  564  cd ..
+  565  cd ../deploy/nodejs/
+  566  ls -ltr
+  567  ./build.js
+  568  ./build.sh 
+  569  sudo podman images
+  570  sudo podman tag do180/todonodejs quay.io/remeshbabu618/do180-todonodejs
+  571  sudo podman push quay.io/remeshbabu618/do180-todonodejs
+  572  cat  /usr/local/etc/ocp4.config 
+  573  oc login -u rcherthedath-cobank-com -p 8e3ff4c35ad84238834f https://api.ocp-na2.prod.nextcle.com:6443
+  574  oc new-prinect rcherthedath-cobank-com-template
+  575  oc new-project rcherthedath-cobank-com-template
+  576  vi /home/student/DO180/labs/multicontainer-openshift/todo-template.json 
+  577  owd
+  578  pwd
+  579  cd ..
+  580  pwd
+  581  ls -al
+  582  oc process -f todo-template.json -p RHT_OCP4_QUAY_USER=remeshbabu618 |oc create -f -
+  583  oc get pods -w
+  584  oc get pods 
+  585  oc get pods -w
+  586  oc expose service todoapi
+  587  oc status
+  588  curl -w "\n"  http://rcherthedath-cobank-com-todoapi-template.apps.ocp-na2.prod.nextcle.com/todo/api/items/1
+  589  oc status
+  590  oc get pods
+  591  oc get pods -w
+  592  curl -w "\n"  http://rcherthedath-cobank-com-todoapi-template.apps.ocp-na2.prod.nextcle.com/todo/api/items/1
+  593  oc expose service todoapi
+  594  oc status
+  595  oc get pods
+  596  oc get routes
+  597  curl -w "\n"  http://rcherthedath-cobank-com-todoapi-template.apps.ocp-na2.prod.nextcle.com/todo/api/items/1
+  598  oc get routes
+  599  curl -w "\n"  http://todppi-rcherthedath-cobank-com-template.apps.ocp-na2.prod.nextcle.com/todo/api/items/1
+  600  curl -w "\n"  http://todoapi-rcherthedath-cobank-com-template.apps.ocp-na2.prod.nextcle.com/todo/api/items/1
+  601  oc get routes
+  602  lab multicontainer-openshift finish
+  603  lab multicontainer-review start
+  604  cd ~/DO180/labs/multicontainer-review/
+  605  set -o set -o vi
+  606  source /usr/local/etc/ocp4.config 
+  607  cat  /usr/local/etc/ocp4.config 
+  608  oc login -u rcherthedath-cobank-com -p 8e3ff4c35ad84238834f https://api.ocp-na2.prod.nextcle.com:6443
+  609  oc new-project rcherthedath-cobank-com-deploy
+  610   cd images/mysql/
+  611  ls
+  612  sudo podman build -t do180-mysql-57-rhel7 .
+  613  sudo podman login quay.io -u remeshbabu618 
+  614  sudo podman tag do180-mysql-57-rhel7 quay.io/rcherthedath-cobank-com/do180-mysql-57-rhel7
+  615  podman images
+  616  sudo podman images
+  617  sudo podman push quay.io/remeshbabu618/do180-mysql-57-rhel7
+  618  sudo podman images
+  619  sudo podman tag do180-mysql-57-rhel7 quay.io/remeshbabu618/do180-mysql-57-rhel7
+  620  sudo podman push quay.io/remeshbabu618/do180-mysql-57-rhel7
+  621  pwd
+  622  cd ..
+  623  ls -al
+  624  cd images/quote-php/
+  625  ls
+  626  sudo podman build -t do180-quote-php .
+  627  sudo podman tag do180-quote-php quay.io/remeshbabu618/do180-quote-php
+  628  sudo podman push quay.io/remeshbabu618/do180-quote-php
+  629  ls -al
+  630  cd ..
+  631  ls -al
+  632  cd ..
+  633  l s-al
+  634  ls -al
+  635  vi quote-php-template.json 
+  636  oc create -f quote-php-template.json 
+  637  oc process quote-php-persistaent -p RHT_OCP4_QUAY_USER=remeshbabu618 | oc create -f -
+  638  oc process quote-php-persistent -p RHT_OCP4_QUAY_USER=remeshbabu618 | oc create -f -
+  639  oc get pods
+  640  oc get pods -w
+  641  oc expose svc quote-php
+  642  oc get route
+  643  oc get pods
+  644  oc get logs
+  645  oc get logs quote-php
+  646  oc get pods
+  647  oc process quote-php-persistent -p RHT_OCP4_QUAY_USER=remeshbabu618 | oc create -f -
+  648  oc delete all --all
+  649  oc get pods
+  650  oc process quote-php-persistent -p RHT_OCP4_QUAY_USER=remeshbabu618 | oc create -f -
+  651  oc get pods
+  652  oc expose svc quote-php
+  653  oc get route
+  654  curl -w "\n" quote-php-rcherthedath-cobank-com-deploy.apps.ocp-na2.prod.nextcle.com
+  655  oc get pods -w
+  656  oc get pods 
+  657  oc pod
+  658  oc --help
+  659  oc delete pod/mysql
+  660  oc get pods 
+  661  oc delete pod/quote-php
+  662  oc process quote-php-persistent -p RHT_OCP4_QUAY_USER=remeshbabu618 | oc create -f -
+  663  oc get pods
+  664  w
+  665  df
+  666  oc status
+  667  oc get pods
+  668  lab multicontainer-review grade
+  669  lab multicontainer-review finish
+  670  lab troubleshoot-s2i start
+  671  clear
+  672  set -o vi
+  673  source /usr/local/etc/ocp4.config 
+  674  cat  /usr/local/etc/ocp4.config 
+  675  cd ~/DO180-apps/
+  676  git checkout master
+  677  git checkout -b troubleshoot-s2i
+  678  git push -u origin troubleshoot-s2i 
+  679  oc login -u rcherthedath-cobank-com -p 8e3ff4c35ad84238834f
+  680  oc new-project rcherthedath-cobank-com-nodejs
+  681  oc new-app --context-dir=nodejs-helloworld https://github.com/remeshbabu618/DO180-apps#troubleshoot-s2i -i nodejs:8 --name nodejs-hello --build-env npm_config_registry=http://nexus-common.apps.ocp-na2.prod.nextcle.com/repository/npm-proxy
+  682  oc get pods
+  683  oc get pods -w
+  684  oc logs bc/nodejs-hellp
+  685  oc get pods -w
+  686  oc logs bc/nodejs-hellp
+  687  pwd
+  688  vi nodejs-helloworld/package.json 
+  689  oc logs bc/nodejs-hellp
+  690  oc get pods
+  691  git commit -am "Fixed Express Release"
+  692  oc start-build bc/nodejs-hello
+  693  oc logs
+  694  oc logs bc/nodejs-hellp
+  695  oc logs bc/nodejs-hello
+  696  oc logs bc/nodejs-hello -f
+  697  oc logs bc/nodejs-hello
+  698  oc get pods
+  699  oc logs bc/nodejs-hello
+  700  oc get pods
+  701  oc logs bc/nodejs-hello
+  702  cat /opt/app-root/src/.npm/_logs/2020-07-16T15_43_19_666Z-debug.log
+  703  oc logs bc/nodejs-hello
+  704  git push
+  705  oc start-build bc/nodejs-hello
+  706  oc logs bc/nodejs-hello
+  707  oc logs bc/nodejs-hello -w
+  708  oc logs bc/nodejs-hello -f
+  709  oc logs bc/nodejs-hello 
+  710  vi nodejs-helloworld/package.json 
+  711  git commit -am "Added Start script"
+  712  git push
+  713  oc start-build bc/nodejs-hellp
+  714  oc start-build bc/nodejs-hello
+  715  oc get pods -w 
+  716  oc logs bc/nodejs-hello -f
+  717  history
+  718  oc logs bc/nodejs-hello -f
+  719  vi nodejs-helloworld/package.json 
+  720  git commit -am "Added Start script again"
+  721  git push
+  722  oc start-build bc/nodejs-hello
+  723  oc get pods -w 
+  724  oc get pods 
+  725  oc logs dc/nodejs-hellp
+  726  oc logs dc/nodejs-hello
+  727  oc expose svc/nodejs-hello
+  728  oc get route -o yaml
+  729  curl =w "\n" http://nodejs-hello-rcherthedath-cobank-com-nodejs.apps.ocp-na2.prod.nextcle.com
+  730  curl =w "\n" http-//nodejs-hello-rcherthedath-cobank-com-nodejs.apps.ocp-na2.prod.nextcle.com
+  731  curl -w "\n" http-//nodejs-hello-rcherthedath-cobank-com-nodejs.apps.ocp-na2.prod.nextcle.com
+  732  curl -w "\n" http://nodejs-hello-rcherthedath-cobank-com-nodejs.apps.ocp-na2.prod.nextcle.com
+  733  lab troubleshoot-s2i  finish
+  734  sudo podman ps
+  735  oc get pods
+  736  clear
+  737  lab troubleshoot-container start
+  738  cd
+  739  pwd
+  740  cd DO180/labs/troubleshoot-container/conf/
+  741  vi httpd.conf 
+  742  pwd
+  743  cd ,,
+  744  ls
+  745  cd ..
+  746  ls -al
+  747  sudo podman build -t troubleshoot-container .
+  748  sudo podman images
+  749  sudo podman run --name troubleshoot-container -d -p 10080:80 troubleshoot-container
+  750  podman logs
+  751  sudo podman run --name troubleshoot-container -d -p 10080:80 troubleshoot-container
+  752  podman logs
+  753  podman images
+  754  sudo podman images
+  755  sudo podman logs -f troubleshoot-container
+  756  sudo podman ps
+  757  sudo podman logs
+  758  sudo podman logs -f troubleshoot-container
+  759  curl http://127.0.0.1:10080
+  760  sudo podman logs  troubleshoot-container
+  761  curl http://127.0.0.1:10080
+  762  sudo podman logs  troubleshoot-container
+  763  lab troubleshoot-container finish
+  764  lab troubleshoot-review start
+  765  source /usr/local/etc/ocp4.config 
+  766  cat  /usr/local/etc/ocp4.config 
+  767  pwd
+  768  cd ..
+  769  ls
+  770  pwd
+  771  cd ../DO180-apps/
+  772  git checkout master
+  773  git checkout -b troubshoot-review
+  774  git push -u origin troubleshoot-review
+  775  pwd
+  776  git checkout -b troubleshoot-review
+  777  git push -u origin troubleshoot-review
+  778  oc login -u rcherthedath-cobank-com -p 8e3ff4c35ad84238834f https://api.ocp-na2.prod.nextcle.com:6443
+  779  https://api.ocp-na2.prod.nextcle.com:6443
+  780  oc new-project rcherthedath-cobank-com-nodejs-app
+  781  oc new-app --context-dir=nodejs-app https://github.com/remeshbabu618/DO180-apps#troubleshoot-review -i nodejs:8 --name nodejs-dev --build-env npm_config_registry=http://nexus-common.apps.ocp-na2.prod.nextcle.com/repository/npm-proxy
+  782  oc logs -f bc/nodejs-dev
+  783  vi /tmp/r1
+  784  oc logs -f bc/nodejs-dev
+  785  oc logs  bc/nodejs-dev
+  786  oc get pods
+  787  pwd
+  788  vi nodejs-app/package.json 
+  789  cat nodejs-app/package.json 
+  790  cd nodejs-app/
+  791  git commit -am "Fixed Express release version"
+  792  git push
+  793  oc start-build
+  794  oc start-build bc/nodejs-dev
+  795  oc logs -f bc/nodejs-dev
+  796  oc get pods
+  797  oc get podsv -w
+  798  oc get pods -w
+  799  oc logs -f dc/nodejs-dev
+  800  oc get pods
+  801  ls -al
+  802  vi server.js 
+  803  cat server.js 
+  804  git commit -am "Fixed typo"
+  805  git push
+  806  oc start-build
+  807  oc start-build bc/nodejs-dev
+  808  oc logs -f dc/nodejs-dev
+  809  oc get pods -s
+  810  oc get pods -w
+  811  oc get pods
+  812  oc logs -f dc/nodejs-dev
+  813  oc expose svc nodejs-dev
+  814  oc get route
+  815  curl nodejs-dev-rcherthedath-cobank-com-nodejs-app.apps.ocp-na2.prod.nextcle.com
+  816  oc logs dc/nodejs-dev
+  817  vi server.js 
+  818  cat server.js 
+  819  git commit -am "Fixed Env"
+  820  git push
+  821  oc start-build bc/nodejs-dev
+  822  oc logs -f bc/nodejs-dev
+  823  oc logs  bc/nodejs-dev
+  824  oc get pods
+  825  curl nodejs-dev-rcherthedath-cobank-com-nodejs-app.apps.ocp-na2.prod.nextcle.com
+  826  lab troubleshoot-review grade
+  827  lab troubleshoot-review finish
+  828  history
+
